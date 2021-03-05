@@ -19,7 +19,17 @@
 from datetime import datetime
 
 
+class Price:
+
+    def __get__(self, instance, owner):
+        return instance._price * 1.2
+
+    def __set__(self, instance, value):
+        instance._price = value
+
+
 class Product(object):
+    price = Price()
 
     def __init__(self, name, description, quantity, price, category=None):
         self.name = name
@@ -29,7 +39,7 @@ class Product(object):
             self.availability = True
         else:
             self.availability = False
-        self.price = price
+        self._price = price
         self.category = category
 
     def __repr__(self):
@@ -157,15 +167,15 @@ print('in_stock_by_cat', stock.in_stock_by_cat('cat1'))  # in_stock_by_cat {'cat
 cart = Cart()
 print('in_stock', stock.in_stock())
 # in_stock {'item1': 20, 'item3': 5, 'item4': 50}
-print('add_to_cart', cart.add_to_cart('item1', 2))  # add_to_cart [{'item1': {'quantity': 2, 'price': 5}}]
+print('add_to_cart', cart.add_to_cart('item1', 2))  # add_to_cart [{'item1': {'quantity': 2, 'price': 6.0}}]
 print('add_to_cart', cart.add_to_cart('item4', 10))
-# add_to_cart [{'item1': {'quantity': 2, 'price': 5}}, {'item4': {'quantity': 10, 'price': 15}}]
+# add_to_cart [{'item1': {'quantity': 2, 'price': 6.0}}, {'item4': {'quantity': 10, 'price': 18.0}}]
 print('in_stock', stock.in_stock())
 # in_stock {'item1': 18, 'item3': 5, 'item4': 40}
 
 print('list_cart', cart.list_cart())
-# list_cart {'items': [{'item1': {'quantity': 2, 'price': 5}}, {'item4': {'quantity': 10, 'price': 15}}], 'total': 160}
+# list_cart {'items': [{'item1': {'quantity': 2, 'price': 6.0}}, {'item4': {'quantity': 10, 'price': 18.0}}], 'total': 192.0}
 print('place_order', cart.place_order())  # None
 print('get_order_by_id', cart.get_order_by_id(1))
-# get_order_by_id {'order_id': 1, 'order_info': {'items': [{'item1': {'quantity': 2, 'price': 5}},
-# {'item4': {'quantity': 10, 'price': 15}}], 'total': 160}, 'order_time': '2021-03-05 14:42:47.081108'}
+# get_order_by_id {'order_id': 1, 'order_info': {'items': [{'item1': {'quantity': 2, 'price': 6.0}},
+# {'item4': {'quantity': 10, 'price': 18.0}}], 'total': 192.0}, 'order_time': '2021-03-05 16:32:23.747957'}
